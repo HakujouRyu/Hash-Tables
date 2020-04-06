@@ -1,6 +1,7 @@
 # '''
 # Linked List hash table key/value pair
 # '''
+
 class LinkedPair:
     def __init__(self, key, value):
         self.key = key
@@ -54,8 +55,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
 
+        ind = self._hash_mod(key)
+        if self.storage[ind]:
+            temp = self.storage[ind]
+            while temp.next:
+                temp = temp.next
+            temp.next = LinkedPair(key, value)
+        else:
+            self.storage[ind] = LinkedPair(key, value)
+    
 
 
     def remove(self, key):
@@ -66,9 +75,16 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        ind = self._hash_mod(key)
+        temp = self.storage[ind]
+        while temp:
+            if temp.key == key:
+                temp = None
+                return
+            temp = temp.next
+        print("Warning")
 
-
+        
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key.
@@ -77,7 +93,13 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        ind = self._hash_mod(key)
+        temp = self.storage[ind]
+        while temp:
+            if temp.key == key:
+                return temp.value
+            temp = temp.next
+        return None
 
 
     def resize(self):
@@ -87,7 +109,14 @@ class HashTable:
 
         Fill this in.
         '''
-        pass
+        self.capacity *= 2
+        old_storage = self.storage.copy()
+        self.storage = [None] * self.capacity
+        for i in range(len(old_storage)):
+            temp = old_storage[i]
+            while temp:
+                self.insert(temp.key, temp.value)
+                temp = temp.next
 
 
 
@@ -105,6 +134,8 @@ if __name__ == "__main__":
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
 
+    
+
     # Test resizing
     old_capacity = len(ht.storage)
     ht.resize()
@@ -116,5 +147,8 @@ if __name__ == "__main__":
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+
+
+    
 
     print("")
