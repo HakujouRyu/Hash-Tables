@@ -7,6 +7,8 @@ class LinkedPair:
         self.key = key
         self.value = value
         self.next = None
+    
+
 
 class HashTable:
     '''
@@ -57,9 +59,18 @@ class HashTable:
         '''
 
         ind = self._hash_mod(key)
+
         if self.storage[ind]:
+
             temp = self.storage[ind]
+            if temp.key == key:
+                    temp.value = value
+                    return
+                    
             while temp.next:
+                if temp.next.key == key:
+                    temp.next.value = value
+                    return
                 temp = temp.next
             temp.next = LinkedPair(key, value)
         else:
@@ -77,10 +88,15 @@ class HashTable:
         '''
         ind = self._hash_mod(key)
         temp = self.storage[ind]
+        prev = None
         while temp:
             if temp.key == key:
-                temp = None
+                if prev:
+                    prev.next = temp.next
+                else:
+                    self.storage[ind] = temp.next
                 return
+            prev = temp
             temp = temp.next
         print("Warning")
 
@@ -147,7 +163,14 @@ if __name__ == "__main__":
     print(ht.retrieve("line_1"))
     print(ht.retrieve("line_2"))
     print(ht.retrieve("line_3"))
+    print("")
 
+    ht.insert("line_1", "Tiny hash table 2")
+    print(ht.retrieve("line_1"))
+    print("")
+
+    ht.remove("line_2")
+    print(ht.retrieve("line_2"))
 
     
 
